@@ -1,0 +1,37 @@
+# Автовиправлення: pre-commit (ruff --fix, ruff format, пробіли, кінці рядків) і коміт виправлень у ту саму гілку
+name: autofix
+
+on:
+  push:
+    branches: ["feature/**", "hotfix/**"]
+  pull_request:
+    branches: [develop]
+
+permissions:
+  contents: write
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pre-commit
+      - name: pre-commit (з автовиправленням)
+        run: pre-commit run --all-files --show-diff-on-failure || true
+      - name: Коміт виправлень
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -am "style: autofix (pre-commit)"
+            git push
+          else
+            echo "Виправлень не потрібно"
+          fi
+      - name: Повторна перевірка
+        run: pre-commit run --all-files
