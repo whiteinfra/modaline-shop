@@ -1,0 +1,12 @@
+line-length = 120
+target-version = "py312"
+
+[lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["B008", "E501", "UP046"]  # Depends() у значеннях за замовчуванням — штатний патерн FastAPI; довгі рядки повідомлень допускаються
+
+[lint.isort]
+known-first-party = ["app"]
+
+[format]
+quote-style = "preserve"
