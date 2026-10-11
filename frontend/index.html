@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ModaLine Shop — адмін-панель</title>
+  <link rel="stylesheet" href="vendor/bootstrap.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- Вхід -->
+<section id="view-login" class="login-wrap d-none">
+  <div class="card shadow-sm login-card">
+    <div class="card-body p-4">
+      <h1 class="h4 mb-1">ModaLine Shop</h1>
+      <p class="text-muted mb-4">Вхід для співробітників магазину</p>
+      <form id="loginForm">
+        <div class="mb-3"><label class="form-label" for="lEmail">Email</label>
+          <input class="form-control" id="lEmail" type="email" required value="manager@modaline.ua"></div>
+        <div class="mb-3"><label class="form-label" for="lPass">Пароль</label>
+          <input class="form-control" id="lPass" type="password" required placeholder="••••••••"></div>
+        <div id="loginErr" class="alert alert-danger py-2 d-none"></div>
+        <button class="btn btn-primary w-100">Увійти</button>
+      </form>
+      <p class="small text-muted mt-3 mb-0">Демо: manager@modaline.ua / Manager123!</p>
+    </div>
+  </div>
+</section>
+
+<!-- Застосунок -->
+<div id="view-app" class="d-none">
+  <nav class="navbar navbar-expand navbar-dark bg-dark px-3">
+    <span class="navbar-brand fw-bold">ModaLine Shop</span>
+    <ul class="navbar-nav me-auto" id="nav">
+      <li class="nav-item"><a class="nav-link" href="#dashboard">Дашборд</a></li>
+      <li class="nav-item"><a class="nav-link" href="#products">Товари</a></li>
+      <li class="nav-item"><a class="nav-link" href="#customers">Клієнти</a></li>
+      <li class="nav-item"><a class="nav-link" href="#orders">Замовлення</a></li>
+      <li class="nav-item"><a class="nav-link" href="#payments">Платежі</a></li>
+    </ul>
+    <span class="navbar-text me-3" id="who"></span>
+    <button class="btn btn-outline-light btn-sm" id="logout">Вийти</button>
+  </nav>
+
+  <main class="container-fluid py-3 px-4">
+    <!-- Дашборд -->
+    <section id="view-dashboard" class="view">
+      <h2 class="h4 mb-3">Дашборд</h2>
+      <div class="row g-3" id="statCards"></div>
+      <div class="card mt-3"><div class="card-body"><h3 class="h6">Замовлення за статусами</h3><div id="statStatus"></div></div></div>
+      <div class="row g-3 mt-0">
+        <div class="col-lg-7"><div class="card h-100"><div class="card-body"><h3 class="h6">Останні замовлення</h3>
+          <table class="table table-sm mb-0"><thead><tr><th>№</th><th>Клієнт</th><th class="text-end">Сума, ₴</th><th>Статус</th></tr></thead><tbody id="dashOrders"></tbody></table></div></div></div>
+        <div class="col-lg-5"><div class="card h-100"><div class="card-body"><h3 class="h6">Закінчуються на складі</h3>
+          <table class="table table-sm mb-0"><thead><tr><th>Артикул</th><th>Товар</th><th class="text-end">Залишок</th></tr></thead><tbody id="dashStock"></tbody></table></div></div></div>
+      </div>
+    </section>
+
+    <!-- Товари -->
+    <section id="view-products" class="view">
+      <div class="d-flex align-items-center mb-3"><h2 class="h4 mb-0 me-auto">Товари <small class="text-muted fs-6" id="pCount"></small></h2>
+        <button class="btn btn-primary" id="pAdd">+ Додати товар</button></div>
+      <form class="row g-2 mb-3 filters" id="pFilters">
+        <div class="col-md-3"><input class="form-control" name="search" placeholder="Пошук: назва або артикул"></div>
+        <div class="col-md-2"><select class="form-select" name="category"><option value="">Усі категорії</option></select></div>
+        <div class="col-md-1"><select class="form-select" name="size"><option value="">Розмір</option><option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option></select></div>
+        <div class="col-md-1"><input class="form-control" name="min_price" type="number" min="0" placeholder="Ціна від"></div>
+        <div class="col-md-1"><input class="form-control" name="max_price" type="number" min="0" placeholder="до"></div>
+        <div class="col-md-2"><select class="form-select" name="sort"><option value="name">За назвою</option><option value="price">Ціна ↑</option><option value="-price">Ціна ↓</option><option value="stock">Залишок ↑</option><option value="-created">Новіші</option></select></div>
+        <div class="col-md-2 d-flex align-items-center"><div class="form-check"><input class="form-check-input" type="checkbox" name="in_stock" id="pInStock"><label class="form-check-label" for="pInStock">Лише в наявності</label></div></div>
+      </form>
+      <div class="card"><table class="table table-hover mb-0 align-middle"><thead><tr><th>Артикул</th><th>Назва</th><th>Категорія</th><th>Розмір</th><th>Колір</th><th class="text-end">Ціна, ₴</th><th class="text-end">Залишок</th><th></th></tr></thead><tbody id="pRows"></tbody></table></div>
+      <nav class="mt-2"><ul class="pagination pagination-sm justify-content-end" id="pPager"></ul></nav>
+    </section>
+
+    <!-- Клієнти -->
+    <section id="view-customers" class="view">
+      <div class="d-flex align-items-center mb-3"><h2 class="h4 mb-0 me-auto">Клієнти <small class="text-muted fs-6" id="cCount"></small></h2>
+        <input class="form-control w-auto me-2" id="cSearch" placeholder="Пошук: ім’я, email, телефон">
+        <button class="btn btn-primary" id="cAdd">+ Додати клієнта</button></div>
+      <div class="card"><table class="table table-hover mb-0 align-middle"><thead><tr><th>Ім’я</th><th>Email</th><th>Телефон</th><th>Місто</th><th class="text-end">Замовлень</th><th></th></tr></thead><tbody id="cRows"></tbody></table></div>
+      <nav class="mt-2"><ul class="pagination pagination-sm justify-content-end" id="cPager"></ul></nav>
+    </section>
+
+    <!-- Замовлення -->
+    <section id="view-orders" class="view">
+      <div class="d-flex align-items-center mb-3"><h2 class="h4 mb-0 me-auto">Замовлення <small class="text-muted fs-6" id="oCount"></small></h2>
+        <select class="form-select w-auto me-2" id="oStatus"><option value="">Усі статуси</option><option value="new">Нові</option><option value="paid">Оплачені</option><option value="shipped">Відправлені</option><option value="completed">Виконані</option><option value="cancelled">Скасовані</option></select>
+        <button class="btn btn-primary" id="oAdd">+ Нове замовлення</button></div>
+      <div class="card"><table class="table table-hover mb-0 align-middle"><thead><tr><th>№</th><th>Клієнт</th><th>Товари</th><th class="text-end">Сума, ₴</th><th class="text-end">Оплачено, ₴</th><th>Статус</th><th>Дата</th><th></th></tr></thead><tbody id="oRows"></tbody></table></div>
+      <nav class="mt-2"><ul class="pagination pagination-sm justify-content-end" id="oPager"></ul></nav>
+    </section>
+
+    <!-- Платежі -->
+    <section id="view-payments" class="view">
+      <div class="d-flex align-items-center mb-3"><h2 class="h4 mb-0 me-auto">Платежі <small class="text-muted fs-6" id="payCount"></small></h2>
+        <select class="form-select w-auto me-2" id="payStatus"><option value="">Усі</option><option value="success">Успішні</option><option value="pending">Очікують</option><option value="failed">Невдалі</option></select>
+        <button class="btn btn-primary" id="payAdd">+ Зареєструвати платіж</button></div>
+      <div class="card"><table class="table table-hover mb-0 align-middle"><thead><tr><th>№</th><th>Замовлення</th><th class="text-end">Сума, ₴</th><th>Спосіб</th><th>Статус</th><th>Оплачено</th><th></th></tr></thead><tbody id="payRows"></tbody></table></div>
+    </section>
+  </main>
+</div>
+
+<!-- Універсальне модальне вікно -->
+<div class="modal fade" id="modal" tabindex="-1"><div class="modal-dialog modal-lg"><form class="modal-content" id="mForm" novalidate>
+  <div class="modal-header"><h5 class="modal-title" id="mTitle"></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+  <div class="modal-body" id="mBody"></div>
+  <div class="modal-footer"><div id="mErr" class="text-danger me-auto small"></div>
+    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Скасувати</button>
+    <button class="btn btn-primary" id="mOk">Зберегти</button></div>
+</form></div></div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3"><div id="toast" class="toast text-bg-dark border-0"><div class="toast-body" id="toastBody"></div></div></div>
+
+<script src="vendor/bootstrap.bundle.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
