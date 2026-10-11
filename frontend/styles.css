@@ -1,0 +1,9 @@
+body { background: #f4f6f9; }
+.login-wrap { min-height: 100vh; display: grid; place-items: center; }
+.login-card { width: 380px; }
+.stat { border-left: 4px solid #2f5f8f; }
+.stat.border-success { border-left-color: #198754 !important; }
+.stat.border-warning { border-left-color: #ffc107 !important; }
+.table thead th { font-size: .8rem; text-transform: uppercase; color: #6c757d; letter-spacing: .03em; }
+.filters .form-control, .filters .form-select { font-size: .9rem; }
+.navbar .nav-link.active { font-weight: 600; }
