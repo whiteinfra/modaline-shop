@@ -1,0 +1,17 @@
+digraph A {
+  rankdir=TB; nodesep=0.25; ranksep=0.45; compound=true; pad=0.15;
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=10.5, color="#2F5F8F", fillcolor="#EAF2FB", margin="0.12,0.06"];
+  edge [color="#2F5F8F", fontname="DejaVu Sans", fontsize=9, arrowsize=0.7];
+  U [label="Користувач\n(менеджер / адміністратор)", shape=box, fillcolor="#FFF2CC", color="#BF9000"];
+  subgraph cluster_c { label="Клієнт (браузер)"; fontname="DejaVu Sans Bold"; fontsize=11; style="rounded,dashed"; color="#888888";
+    SPA [label="SPA: HTML + Vanilla JS\n+ Bootstrap 5\n(frontend/)"]; LS [label="localStorage\n(JWT-токен)", shape=note, fillcolor="#F2F2F2", color="#777777"]; }
+  subgraph cluster_s { label="Контейнер api (Docker): Python 3.12, FastAPI, Uvicorn"; fontname="DejaVu Sans Bold"; fontsize=11; style="rounded,filled"; fillcolor="#F4F8FC"; color="#2F5F8F";
+    R [label="Маршрутизатори REST API\n/api/auth, /products, /customers,\n/orders, /payments, /stats"];
+    V [label="Валідація\nPydantic-схеми"]; S [label="Безпека: bcrypt,\nJWT (PyJWT), OAuth2"];
+    O [label="ORM SQLAlchemy 2\n(models.py)"]; M [label="migrate.py\n(SQL-міграції)"]; D [label="Swagger UI /docs\nOpenAPI /openapi.json"]; ST [label="StaticFiles\n(роздача SPA)"]; }
+  subgraph cluster_d { label="Контейнер db (Docker)"; fontname="DejaVu Sans Bold"; fontsize=11; style="rounded,filled"; fillcolor="#FFFBEF"; color="#BF9000";
+    DB [label="PostgreSQL 16\nmodaline_shop", shape=cylinder, fillcolor="#FFF2CC", color="#9C6500"]; }
+  U -> SPA; SPA -> LS [style=dashed, arrowhead=none];
+  SPA -> R [label=" HTTP JSON\n Authorization: Bearer"]; SPA -> ST [style=dashed, label=" GET /"];
+  R -> V; R -> S; R -> O; O -> DB [label=" SQL"]; M -> DB [label=" DDL"]; R -> D [style=dashed, arrowhead=none];
+}

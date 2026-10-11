@@ -1,0 +1,77 @@
+@startuml
+skinparam dpi 160
+skinparam defaultFontName "DejaVu Sans"
+skinparam defaultFontSize 11
+skinparam shadowing false
+skinparam linetype ortho
+skinparam ArrowColor #2F5F8F
+skinparam ClassBorderColor #2F5F8F
+skinparam ClassBackgroundColor #F7FAFD
+skinparam ClassHeaderBackgroundColor #DCE8F4
+hide circle
+hide methods
+entity "users" as users {
+  * id : SERIAL <<PK>>
+  --
+  * email : VARCHAR(120) <<UQ>>
+  * password_hash : VARCHAR(255)
+  * full_name : VARCHAR(100)
+  * role : VARCHAR(20)
+  * created_at : TIMESTAMP
+}
+entity "customers" as customers {
+  * id : SERIAL <<PK>>
+  --
+  * full_name : VARCHAR(100)
+  * email : VARCHAR(120) <<UQ>>
+  phone : VARCHAR(20)
+  city : VARCHAR(60)
+  * created_at : TIMESTAMP
+}
+entity "products" as products {
+  * id : SERIAL <<PK>>
+  --
+  * sku : VARCHAR(30) <<UQ>>
+  * name : VARCHAR(150)
+  * category : VARCHAR(60)
+  * size : VARCHAR(5)
+  * color : VARCHAR(30)
+  * price : NUMERIC(10,2)
+  * stock : INT
+  description : TEXT
+  * created_at : TIMESTAMP
+}
+entity "orders" as orders {
+  * id : SERIAL <<PK>>
+  --
+  * customer_id : INT <<FK>>
+  * status : VARCHAR(20)
+  * total : NUMERIC(10,2)
+  comment : TEXT
+  created_by : INT <<FK>>
+  * created_at : TIMESTAMP
+}
+entity "order_items" as items {
+  * id : SERIAL <<PK>>
+  --
+  * order_id : INT <<FK>>
+  * product_id : INT <<FK>>
+  * quantity : INT
+  * unit_price : NUMERIC(10,2)
+}
+entity "payments" as payments {
+  * id : SERIAL <<PK>>
+  --
+  * order_id : INT <<FK>>
+  * amount : NUMERIC(10,2)
+  * method : VARCHAR(20)
+  * status : VARCHAR(20)
+  paid_at : TIMESTAMP
+  * created_at : TIMESTAMP
+}
+customers ||--o{ orders
+users |o--o{ orders
+orders ||--|{ items
+products ||--o{ items
+orders ||--o{ payments
+@enduml
